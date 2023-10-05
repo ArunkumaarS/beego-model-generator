@@ -12,8 +12,7 @@ import (
 
 func main() {
 	// Replace with your database connection details
-	dsn := "user:pwd@tcp(host:port)/dbname"
-	// Open a database connection
+	dsn := "user:pwd@tcp(host:port)/db" // Open a database connection
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatalf("Error connecting to the database: %v", err)
@@ -108,16 +107,16 @@ func generateModelCode(db *sql.DB, tableName string) string {
 		goTag += "\""
 
 		// Construct the Go field and tag
-		columnDefinition := fmt.Sprintf("%s %s ", goField, dataType)
+		columnDefinition := fmt.Sprintf("%s %s ", strings.Title(goField), dataType)
 		if goTag != "orm:\"column();\"" {
-			columnDefinition += "`" + goTag + "json:\"" + goField + "\"`"
+			columnDefinition += "`" + goTag + " json:\"" + goField + "\"`"
 		}
 
 		columnNames = append(columnNames, columnDefinition)
 	}
 	title := strings.Title(tableName)
 	// Generate the Go model code
-	modelCode := fmt.Sprintf(`package models
+	modelCode := fmt.Sprintf(`package packagemodel
 
 import (
 	"time"
